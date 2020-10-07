@@ -22,9 +22,17 @@ final class ConversationsListViewController: UIViewController {
         return tableView
     }()
     
+    private var currentTheme: Theme = ThemeManager.shared.currentTheme
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(tableView)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: makeSettingsButton())
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: makeProfileButton())
+        applyTheme(currentTheme)
+    }
+    
+    private func makeProfileButton() -> UIButton {
         let profileButton = UIButton(type: .custom)
         profileButton.setTitleColor(
             UIColor(red: 0.212, green: 0.216, blue: 0.22, alpha: 1),
@@ -35,7 +43,17 @@ final class ConversationsListViewController: UIViewController {
         profileButton.layer.backgroundColor = UIColor(red: 0.894, green: 0.908, blue: 0.17, alpha: 1).cgColor
         profileButton.layer.cornerRadius = profileButton.bounds.width / 2
         profileButton.addTarget(self, action: #selector(openProfile), for: .touchUpInside)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: profileButton)
+        return profileButton
+    }
+    
+    private func makeSettingsButton() -> UIButton {
+        let settingsButton = UIButton(type: .custom)
+        let image = UIImage(named: "SettingsIcon")
+        settingsButton.setImage(image, for: .normal)
+        settingsButton.tintColor = currentTheme.colors.settingsIconColor
+        settingsButton.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
+        settingsButton.addTarget(self, action: #selector(openSettings), for: .touchUpInside)
+        return settingsButton
     }
     
     @objc private func openProfile(_ sender: Any) {
@@ -45,6 +63,18 @@ final class ConversationsListViewController: UIViewController {
         }
         profileViewController.modalPresentationStyle = .pageSheet
         present(profileViewController, animated: true)
+    }
+    
+    @objc private func openSettings(_ sender: Any) {
+        guard let themesViewController = ThemesViewController.storyboardInstance() as? ThemesViewController else {
+            assertionFailure()
+            return
+        }
+        // themesViewController.delegate = self
+        themesViewController.onThemePicked = { [weak self] in
+            self?.applyTheme($0)
+        }
+        navigationController?.pushViewController(themesViewController, animated: true)
     }
 }
 
@@ -65,8 +95,13 @@ extension ConversationsListViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? ConversationsTableViewCell else {
             return UITableViewCell()
         }
+        cell.applyTheme(currentTheme)
         cell.configure(with: conversations[indexPath.section].items[indexPath.row])
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        (view as? UITableViewHeaderFooterView)?.textLabel?.textColor = currentTheme.colors.primaryTextColor
     }
 }
 
@@ -80,6 +115,30 @@ extension ConversationsListViewController: UITableViewDelegate {
         let conversation = conversations[indexPath.section].items[indexPath.row]
         conversationViewController.selectedName = conversation.name
         navigationController?.pushViewController(conversationViewController, animated: true)
+    }
+}
+
+extension ConversationsListViewController: ThemesPickerDelegate {
+    func themePicked(_ theme: Theme) {
+        applyTheme(theme)
+    }
+}
+
+extension ConversationsListViewController: ThemeableView {
+    func applyTheme(_ theme: Theme) {
+        ThemeManager.shared.currentTheme = theme
+        currentTheme = theme
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = theme.userInterfaceStyle
+        }
+        view.backgroundColor = theme.colors.backgroundColor
+        let navigationBar = navigationController?.navigationBar
+        navigationBar?.barTintColor = theme.colors.navigationBarColor
+        navigationBar?.titleTextAttributes = [.foregroundColor: theme.colors.primaryTextColor]
+        navigationItem.leftBarButtonItem?.customView?.tintColor = theme.colors.settingsIconColor
+        tableView.backgroundColor = theme.colors.backgroundColor
+        tableView.backgroundView?.backgroundColor = theme.colors.backgroundColor
+        tableView.reloadData()
     }
 }
 

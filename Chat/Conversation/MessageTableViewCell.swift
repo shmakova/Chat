@@ -8,11 +8,13 @@
 
 import UIKit
 
-class MessageTableViewCell: UITableViewCell, ConfigurableView {
+class MessageTableViewCell: UITableViewCell, ConfigurableView, ThemeableView {
     
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var messageContainerView: UIView!
     @IBOutlet weak var messageLabel: UILabel!
+    
+    private var currentTheme: Theme = .classic
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -24,10 +26,16 @@ class MessageTableViewCell: UITableViewCell, ConfigurableView {
         switch model.kind {
         case .incoming:
             stackView.alignment = .leading
-            messageContainerView.backgroundColor = UIColor(red: 0.875, green: 0.875, blue: 0.875, alpha: 1)
+            messageContainerView.backgroundColor = currentTheme.colors.incomingMessageColor
+            messageLabel.textColor = currentTheme.colors.incomingMessageTextColor
         case .outgoing:
             stackView.alignment = .trailing
-            messageContainerView.backgroundColor = UIColor(red: 0.863, green: 0.969, blue: 0.773, alpha: 1)
+            messageContainerView.backgroundColor = currentTheme.colors.outgoingMessageColor
+            messageLabel.textColor = currentTheme.colors.outgoingMessageTextColor
         }
+    }
+    
+    func applyTheme(_ theme: Theme) {
+        self.currentTheme = theme
     }
 }
