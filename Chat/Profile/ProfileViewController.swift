@@ -60,6 +60,10 @@ class ProfileViewController: UIViewController {
         logViewControllerState()
     }
     
+    @IBAction func onCloseTap(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
+    
     @IBAction func onEditTap(_ sender: Any) {
         let alertController = UIAlertController(
             title: "Choose an action",
