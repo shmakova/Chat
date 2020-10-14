@@ -24,6 +24,15 @@ extension Theme {
         }
     }
     
+    var activityIndicatorStyle:  UIActivityIndicatorView.Style {
+        switch self {
+        case .classic, .day:
+            return .gray
+        case .dark:
+            return .white
+        }
+    }
+    
     var colors: Colors {
         switch self {
         case .classic:

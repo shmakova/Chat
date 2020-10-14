@@ -25,6 +25,11 @@
 		3BD745C92524AA1B00D78EEE /* MessageTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3BD745C72524AA1B00D78EEE /* MessageTableViewCell.xib */; };
 		3BED3F06252E5DD600405047 /* ThemeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BED3F05252E5DD600405047 /* ThemeManager.swift */; };
 		3BED3F08252E61AD00405047 /* ThemeableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BED3F07252E61AD00405047 /* ThemeableView.swift */; };
+		3BED3F0A253644F400405047 /* GCDProfileDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BED3F09253644F400405047 /* GCDProfileDataManager.swift */; };
+		3BED3F0C2536450400405047 /* ProfileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BED3F0B2536450400405047 /* ProfileData.swift */; };
+		3BED3F0E253645BE00405047 /* ProfileDataManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BED3F0D253645BE00405047 /* ProfileDataManaging.swift */; };
+		3BED3F1025377C5E00405047 /* OperationProfileDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BED3F0F25377C5E00405047 /* OperationProfileDataManager.swift */; };
+		3BED3F1225377C8800405047 /* FileProfileDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BED3F1125377C8800405047 /* FileProfileDataManager.swift */; };
 		3BF0E68825213AC500C3E947 /* ConversationsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF0E68725213AC500C3E947 /* ConversationsListViewController.swift */; };
 		3BF0E68A25239D6700C3E947 /* ConversationsListViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3BF0E68925239D6700C3E947 /* ConversationsListViewController.storyboard */; };
 		3BF0E68C2523A88900C3E947 /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF0E68B2523A88900C3E947 /* UIViewControllerExtensions.swift */; };
@@ -57,6 +62,11 @@
 		3BD745C72524AA1B00D78EEE /* MessageTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageTableViewCell.xib; sourceTree = "<group>"; };
 		3BED3F05252E5DD600405047 /* ThemeManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeManager.swift; sourceTree = "<group>"; };
 		3BED3F07252E61AD00405047 /* ThemeableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeableView.swift; sourceTree = "<group>"; };
+		3BED3F09253644F400405047 /* GCDProfileDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDProfileDataManager.swift; sourceTree = "<group>"; };
+		3BED3F0B2536450400405047 /* ProfileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileData.swift; sourceTree = "<group>"; };
+		3BED3F0D253645BE00405047 /* ProfileDataManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDataManaging.swift; sourceTree = "<group>"; };
+		3BED3F0F25377C5E00405047 /* OperationProfileDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperationProfileDataManager.swift; sourceTree = "<group>"; };
+		3BED3F1125377C8800405047 /* FileProfileDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileProfileDataManager.swift; sourceTree = "<group>"; };
 		3BF0E68725213AC500C3E947 /* ConversationsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListViewController.swift; sourceTree = "<group>"; };
 		3BF0E68925239D6700C3E947 /* ConversationsListViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ConversationsListViewController.storyboard; sourceTree = "<group>"; };
 		3BF0E68B2523A88900C3E947 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
@@ -134,6 +144,11 @@
 			children = (
 				3B33D22E250D053000355849 /* ProfileViewController.swift */,
 				3B33D230250D053000355849 /* ProfileViewController.storyboard */,
+				3BED3F0D253645BE00405047 /* ProfileDataManaging.swift */,
+				3BED3F09253644F400405047 /* GCDProfileDataManager.swift */,
+				3BED3F0F25377C5E00405047 /* OperationProfileDataManager.swift */,
+				3BED3F1125377C8800405047 /* FileProfileDataManager.swift */,
+				3BED3F0B2536450400405047 /* ProfileData.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -242,6 +257,8 @@
 				3BF0E68F2523AEAD00C3E947 /* ConversationsTableViewCell.swift in Sources */,
 				3B33D22F250D053000355849 /* ProfileViewController.swift in Sources */,
 				3BF0E6962523D5D900C3E947 /* ConversationViewController.swift in Sources */,
+				3BED3F0E253645BE00405047 /* ProfileDataManaging.swift in Sources */,
+				3BED3F0C2536450400405047 /* ProfileData.swift in Sources */,
 				3BF0E6942523B3F800C3E947 /* ConversationCellModel.swift in Sources */,
 				3B041EE2252E3B1D00F96349 /* ThemesPickerDelegate.swift in Sources */,
 				3BD745C82524AA1B00D78EEE /* MessageTableViewCell.swift in Sources */,
@@ -252,11 +269,14 @@
 				3BED3F08252E61AD00405047 /* ThemeableView.swift in Sources */,
 				3BED3F06252E5DD600405047 /* ThemeManager.swift in Sources */,
 				3BF0E6922523B2F900C3E947 /* ConfigurableView.swift in Sources */,
+				3BED3F0A253644F400405047 /* GCDProfileDataManager.swift in Sources */,
 				3BD745C52524A9A100D78EEE /* MessageCellModel.swift in Sources */,
+				3BED3F1025377C5E00405047 /* OperationProfileDataManager.swift in Sources */,
 				3B33D23F250D19D400355849 /* Logger.swift in Sources */,
 				3B041ED2252BA89500F96349 /* ThemesViewController.swift in Sources */,
 				3B041EE0252E3AA300F96349 /* Theme.swift in Sources */,
 				3B33D22B250D053000355849 /* AppDelegate.swift in Sources */,
+				3BED3F1225377C8800405047 /* FileProfileDataManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
