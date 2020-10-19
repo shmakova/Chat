@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ThemeButton" customModule="Chat" customModuleProvider="target">
+            <connections>
+                <outlet property="button" destination="a8f-pz-Pun" id="hCj-ET-P86"/>
+                <outlet property="containerView" destination="NQX-pj-AR9" id="4Bt-nP-wgD"/>
+                <outlet property="contentView" destination="rbQ-1O-41t" id="pEh-Vd-xyU"/>
+                <outlet property="incomingMessageImageView" destination="tnX-w2-JFv" id="4FE-yf-K6z"/>
+                <outlet property="outgoingMessageImageView" destination="9Jm-0H-TN8" id="tev-qb-RLW"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="rbQ-1O-41t">
+            <rect key="frame" x="0.0" y="0.0" width="567" height="191"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <subviews>
+                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="0iT-Gz-o1c">
+                    <rect key="frame" x="133.5" y="44" width="300" height="113"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NQX-pj-AR9">
+                            <rect key="frame" x="0.0" y="0.0" width="300" height="56"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="BH2-Pf-rg5">
+                                    <rect key="frame" x="24" y="10" width="252" height="36"/>
+                                    <subviews>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="IncomingMessageIcon" translatesAutoresizingMaskIntoConstraints="NO" id="tnX-w2-JFv">
+                                            <rect key="frame" x="0.0" y="0.0" width="122" height="36"/>
+                                        </imageView>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="bottomRight" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="OutgoingMessageIcon" translatesAutoresizingMaskIntoConstraints="NO" id="9Jm-0H-TN8">
+                                            <rect key="frame" x="130" y="0.0" width="122" height="36"/>
+                                        </imageView>
+                                    </subviews>
+                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <constraints>
+                                        <constraint firstItem="9Jm-0H-TN8" firstAttribute="width" secondItem="tnX-w2-JFv" secondAttribute="width" id="uba-LU-J2s"/>
+                                    </constraints>
+                                </stackView>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            <constraints>
+                                <constraint firstAttribute="bottom" secondItem="BH2-Pf-rg5" secondAttribute="bottom" constant="10" id="9UV-Ry-I0Y"/>
+                                <constraint firstAttribute="trailing" secondItem="BH2-Pf-rg5" secondAttribute="trailing" constant="24" id="Cwx-yW-8Wi"/>
+                                <constraint firstItem="BH2-Pf-rg5" firstAttribute="top" secondItem="NQX-pj-AR9" secondAttribute="top" constant="10" id="SJw-22-b0s"/>
+                                <constraint firstAttribute="height" constant="56" id="v8c-Ec-Y4c"/>
+                                <constraint firstItem="BH2-Pf-rg5" firstAttribute="leading" secondItem="NQX-pj-AR9" secondAttribute="leading" constant="24" id="vSJ-Z5-sJf"/>
+                            </constraints>
+                            <userDefinedRuntimeAttributes>
+                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                    <integer key="value" value="14"/>
+                                </userDefinedRuntimeAttribute>
+                            </userDefinedRuntimeAttributes>
+                        </view>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="a8f-pz-Pun">
+                            <rect key="frame" x="0.0" y="72" width="300" height="41"/>
+                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="19"/>
+                            <state key="normal" title="Button">
+                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </state>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="300" id="gcL-89-Cuc"/>
+                    </constraints>
+                </stackView>
+            </subviews>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="LOv-Hy-dhJ" firstAttribute="bottom" secondItem="0iT-Gz-o1c" secondAttribute="bottom" id="7Kf-vy-9Ud"/>
+                <constraint firstItem="0iT-Gz-o1c" firstAttribute="top" secondItem="LOv-Hy-dhJ" secondAttribute="top" id="7l3-jm-l42"/>
+                <constraint firstItem="0iT-Gz-o1c" firstAttribute="centerX" secondItem="rbQ-1O-41t" secondAttribute="centerX" id="tGW-YM-Zg8"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <viewLayoutGuide key="safeArea" id="LOv-Hy-dhJ"/>
+            <point key="canvasLocation" x="71.739130434782609" y="165.06696428571428"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="IncomingMessageIcon" width="120" height="28.5"/>
+        <image name="OutgoingMessageIcon" width="119.5" height="28"/>
+    </resources>
+</document>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.3" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Feg-Cc-imj">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Settings-->
+        <scene sceneID="AGw-QH-U5a">
+            <objects>
+                <viewController title="Settings" id="Feg-Cc-imj" customClass="ThemesViewController" customModule="Chat" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="6w7-dD-inE">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalCentering" spacing="35" translatesAutoresizingMaskIntoConstraints="NO" id="XYW-Pc-Py2">
+                                <rect key="frame" x="36" y="362" width="342" height="172"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lDY-CW-xDa" customClass="ThemeButton" customModule="Chat" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="342" height="34"/>
+                                        <connections>
+                                            <action selector="onClassicThemeButtonTap:" destination="Feg-Cc-imj" eventType="touchUpInside" id="l2f-Uv-2V0"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="m5O-bn-mPe" customClass="ThemeButton" customModule="Chat" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="69" width="342" height="34"/>
+                                        <connections>
+                                            <action selector="onDayThemeButtonTap:" destination="Feg-Cc-imj" eventType="touchUpInside" id="6JZ-e5-aRp"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gN6-dR-LUc" customClass="ThemeButton" customModule="Chat" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="138" width="342" height="34"/>
+                                        <connections>
+                                            <action selector="onDarkThemeButtonTap:" destination="Feg-Cc-imj" eventType="touchUpInside" id="hkL-yz-NjG"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" red="0.098039215686274508" green="0.21176470588235294" blue="0.38039215686274508" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="XYW-Pc-Py2" firstAttribute="centerY" secondItem="6w7-dD-inE" secondAttribute="centerY" id="4jj-Yi-bHY"/>
+                            <constraint firstItem="IcO-GX-713" firstAttribute="trailing" secondItem="XYW-Pc-Py2" secondAttribute="trailing" constant="36" id="FZ8-gC-nmq"/>
+                            <constraint firstItem="XYW-Pc-Py2" firstAttribute="leading" secondItem="IcO-GX-713" secondAttribute="leading" constant="36" id="Q2W-V7-jK8"/>
+                            <constraint firstItem="XYW-Pc-Py2" firstAttribute="centerX" secondItem="6w7-dD-inE" secondAttribute="centerX" id="RTA-Jp-Fun"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="IcO-GX-713"/>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                <integer key="value" value="1"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                    <connections>
+                        <outlet property="classicThemeButton" destination="lDY-CW-xDa" id="b3S-c9-L77"/>
+                        <outlet property="darkThemeButton" destination="gN6-dR-LUc" id="IGI-i4-QsO"/>
+                        <outlet property="dayThemeButton" destination="m5O-bn-mPe" id="ctJ-2O-Ypi"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XIq-23-EmU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="155" y="63"/>
+        </scene>
+    </scenes>
+</document>

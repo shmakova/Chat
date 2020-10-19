@@ -24,6 +24,8 @@ final class ConversationViewController: UIViewController {
         return tableView
     }()
     
+    private let currentTheme = ThemeManager.shared.currentTheme
+    
     var selectedName: String = ""
     
     override func viewDidLoad() {
@@ -31,6 +33,7 @@ final class ConversationViewController: UIViewController {
         messagesStorage = messages.shuffled()
         navigationItem.title = selectedName
         view.addSubview(tableView)
+        applyTheme(currentTheme)
     }
 }
 
@@ -43,8 +46,21 @@ extension ConversationViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? MessageTableViewCell else {
             return UITableViewCell()
         }
+        cell.applyTheme(currentTheme)
         cell.configure(with: messagesStorage[indexPath.row])
         return cell
+    }
+}
+
+extension ConversationViewController: ThemeableView {
+    func applyTheme(_ theme: Theme) {
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = theme.userInterfaceStyle
+        }
+        view.backgroundColor = theme.colors.backgroundColor
+        tableView.backgroundColor = theme.colors.backgroundColor
+        tableView.backgroundView?.backgroundColor = theme.colors.backgroundColor
+        tableView.reloadData()
     }
 }
 

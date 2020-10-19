@@ -14,6 +14,11 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var avatarInitialsView: UILabel!
     @IBOutlet weak var avatarEditButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
+    @IBOutlet weak var navigationBar: UINavigationBar!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var jobLabel: UILabel!
+    
+    private let currentTheme = ThemeManager.shared.currentTheme
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -26,6 +31,7 @@ class ProfileViewController: UIViewController {
         log("Save button frame \(saveButton.frame)")
         avatarImageView.layer.cornerRadius = avatarImageView.bounds.width / 2
         saveButton.layer.cornerRadius = 14
+        applyTheme(ThemeManager.shared.currentTheme)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -122,6 +128,20 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension ProfileViewController: ThemeableView {
+    func applyTheme(_ theme: Theme) {
+        if #available(iOS 13.0, *) {
+            overrideUserInterfaceStyle = theme.userInterfaceStyle
+        }
+        view.backgroundColor = theme.colors.backgroundColor
+        navigationBar?.barTintColor = theme.colors.navigationBarColor
+        navigationBar?.titleTextAttributes = [.foregroundColor: theme.colors.primaryTextColor]
+        nameLabel.textColor = theme.colors.primaryTextColor
+        jobLabel.textColor = theme.colors.primaryTextColor
+        saveButton.backgroundColor = theme.colors.profileSaveButtonBackgroundColor
     }
 }
 

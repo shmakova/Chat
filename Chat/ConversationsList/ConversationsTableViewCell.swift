@@ -8,11 +8,13 @@
 
 import UIKit
 
-class ConversationsTableViewCell: UITableViewCell, ConfigurableView {
+class ConversationsTableViewCell: UITableViewCell, ConfigurableView, ThemeableView {
 
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var messageLabel: UILabel!
+    
+    private var currentTheme: Theme = .classic
     
     func configure(with model: ConversationCellModel) {
         nameLabel.text = model.name
@@ -23,7 +25,7 @@ class ConversationsTableViewCell: UITableViewCell, ConfigurableView {
             dateLabel.isHidden = true
         } else {
             messageLabel.text = model.message
-            messageLabel.textColor = UIColor(red: 0.235, green: 0.235, blue: 0.263, alpha: 0.6)
+            messageLabel.textColor = currentTheme.colors.secondaryTextColor
             dateLabel.isHidden = false
         }
         if model.isOnline {
@@ -36,6 +38,13 @@ class ConversationsTableViewCell: UITableViewCell, ConfigurableView {
         } else {
             messageLabel.font = .systemFont(ofSize: messageFontSize)
         }
+    }
+    
+    func applyTheme(_ theme: Theme) {
+        self.currentTheme = theme
+        nameLabel.textColor = theme.colors.primaryTextColor
+        messageLabel.textColor = theme.colors.secondaryTextColor
+        dateLabel.textColor = theme.colors.secondaryTextColor
     }
 }
 
