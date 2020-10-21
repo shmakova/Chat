@@ -23,8 +23,20 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kjJ-cw-wVD">
                                 <rect key="frame" x="72" y="0.0" width="216" height="93"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UXT-Ef-f78">
-                                        <rect key="frame" x="8" y="8" width="200" height="77"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jd9-Zt-oun">
+                                        <rect key="frame" x="8" y="8" width="200" height="13.5"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ug8-3D-sTk">
+                                        <rect key="frame" x="8" y="71.5" width="200" height="13.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UXT-Ef-f78">
+                                        <rect key="frame" x="8" y="25.5" width="200" height="42"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -32,10 +44,16 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.86274509799999999" green="0.96862745100000003" blue="0.7725490196" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstItem="UXT-Ef-f78" firstAttribute="leading" secondItem="kjJ-cw-wVD" secondAttribute="leading" constant="8" id="DEE-Ys-4Db"/>
-                                    <constraint firstItem="UXT-Ef-f78" firstAttribute="top" secondItem="kjJ-cw-wVD" secondAttribute="top" constant="8" id="ivs-MP-5Ke"/>
-                                    <constraint firstAttribute="trailing" secondItem="UXT-Ef-f78" secondAttribute="trailing" constant="8" id="ktA-rC-9g6"/>
-                                    <constraint firstAttribute="bottom" secondItem="UXT-Ef-f78" secondAttribute="bottom" constant="8" id="tL5-LO-Hob"/>
+                                    <constraint firstAttribute="bottom" secondItem="ug8-3D-sTk" secondAttribute="bottom" constant="8" id="0HF-kP-DBG"/>
+                                    <constraint firstItem="UXT-Ef-f78" firstAttribute="top" secondItem="Jd9-Zt-oun" secondAttribute="bottom" constant="4" id="Nxe-jm-9WR"/>
+                                    <constraint firstAttribute="trailing" secondItem="UXT-Ef-f78" secondAttribute="trailing" constant="8" id="QMG-Y5-ixQ"/>
+                                    <constraint firstItem="ug8-3D-sTk" firstAttribute="top" secondItem="UXT-Ef-f78" secondAttribute="bottom" constant="4" id="YYB-sB-2Y6"/>
+                                    <constraint firstItem="UXT-Ef-f78" firstAttribute="leading" secondItem="kjJ-cw-wVD" secondAttribute="leading" constant="8" id="boM-Mx-0LT"/>
+                                    <constraint firstAttribute="trailing" secondItem="ug8-3D-sTk" secondAttribute="trailing" constant="8" id="fB7-mv-XGW"/>
+                                    <constraint firstItem="ug8-3D-sTk" firstAttribute="leading" secondItem="kjJ-cw-wVD" secondAttribute="leading" constant="8" id="fCJ-M6-hON"/>
+                                    <constraint firstAttribute="trailing" secondItem="Jd9-Zt-oun" secondAttribute="trailing" constant="8" id="o8V-1C-BZa"/>
+                                    <constraint firstItem="Jd9-Zt-oun" firstAttribute="top" secondItem="kjJ-cw-wVD" secondAttribute="top" constant="8" id="s0Y-09-q29"/>
+                                    <constraint firstItem="Jd9-Zt-oun" firstAttribute="leading" secondItem="kjJ-cw-wVD" secondAttribute="leading" constant="8" id="v2S-yE-nBi"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -53,8 +71,10 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
+                <outlet property="dateLabel" destination="ug8-3D-sTk" id="bcF-tX-bfQ"/>
                 <outlet property="messageContainerView" destination="kjJ-cw-wVD" id="26s-IP-cVK"/>
                 <outlet property="messageLabel" destination="UXT-Ef-f78" id="pwB-56-xnN"/>
+                <outlet property="nameLabel" destination="Jd9-Zt-oun" id="VLU-4u-YxC"/>
                 <outlet property="stackView" destination="Dxk-JX-X09" id="tDy-Ul-m0I"/>
             </connections>
             <point key="canvasLocation" x="137.68115942028987" y="53.236607142857139"/>

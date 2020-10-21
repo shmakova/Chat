@@ -14,6 +14,6 @@ struct MessageCellModel {
         case outgoing
     }
     
-    let text: String
+    let message: Message
     let kind: Kind
 }

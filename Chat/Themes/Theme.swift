@@ -24,7 +24,7 @@ extension Theme {
         }
     }
     
-    var activityIndicatorStyle:  UIActivityIndicatorView.Style {
+    var activityIndicatorStyle: UIActivityIndicatorView.Style {
         switch self {
         case .classic, .day:
             return .gray
@@ -45,9 +45,12 @@ extension Theme {
                 settingsBackgroundColor: UIColor(red: 0.098, green: 0.21, blue: 0.379, alpha: 1),
                 incomingMessageColor: UIColor(red: 0.875, green: 0.875, blue: 0.875, alpha: 1),
                 incomingMessageTextColor: .black,
+                incomingDateTextColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.25),
                 outgoingMessageColor: UIColor(red: 0.863, green: 0.969, blue: 0.773, alpha: 1),
                 outgoingMessageTextColor: .black,
-                profileSaveButtonBackgroundColor: UIColor(red: 0.965, green: 0.965, blue: 0.965, alpha: 1)
+                outgoingDateTextColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.25),
+                profileSaveButtonBackgroundColor: UIColor(red: 0.965, green: 0.965, blue: 0.965, alpha: 1),
+                sendMessageViewBackgroundColor: UIColor(red: 0.965, green: 0.965, blue: 0.965, alpha: 1)
             )
         case .day:
             return Colors(
@@ -59,9 +62,12 @@ extension Theme {
                 settingsBackgroundColor: UIColor(red: 0.263, green: 0.537, blue: 0.976, alpha: 1),
                 incomingMessageColor: UIColor(red: 0.918, green: 0.922, blue: 0.929, alpha: 1),
                 incomingMessageTextColor: .black,
+                incomingDateTextColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.25),
                 outgoingMessageColor: UIColor(red: 0.263, green: 0.537, blue: 0.976, alpha: 1),
                 outgoingMessageTextColor: .white,
-                profileSaveButtonBackgroundColor: UIColor(red: 0.965, green: 0.965, blue: 0.965, alpha: 1)
+                outgoingDateTextColor: .white,
+                profileSaveButtonBackgroundColor: UIColor(red: 0.965, green: 0.965, blue: 0.965, alpha: 1),
+                sendMessageViewBackgroundColor: UIColor(red: 0.965, green: 0.965, blue: 0.965, alpha: 1)
             )
         case .dark:
             return Colors(
@@ -73,9 +79,12 @@ extension Theme {
                 settingsBackgroundColor: .black,
                 incomingMessageColor: UIColor(red: 0.18, green: 0.18, blue: 0.18, alpha: 1),
                 incomingMessageTextColor: .white,
+                incomingDateTextColor: .white,
                 outgoingMessageColor: UIColor(red: 0.361, green: 0.361, blue: 0.361, alpha: 1),
                 outgoingMessageTextColor: .white,
-                profileSaveButtonBackgroundColor: UIColor(red: 0.106, green: 0.106, blue: 0.106, alpha: 1)
+                outgoingDateTextColor: .white,
+                profileSaveButtonBackgroundColor: UIColor(red: 0.106, green: 0.106, blue: 0.106, alpha: 1),
+                sendMessageViewBackgroundColor: .black
             )
         }
     }
@@ -90,7 +99,10 @@ struct Colors {
     let settingsBackgroundColor: UIColor
     let incomingMessageColor: UIColor
     let incomingMessageTextColor: UIColor
+    let incomingDateTextColor: UIColor
     let outgoingMessageColor: UIColor
     let outgoingMessageTextColor: UIColor
+    let outgoingDateTextColor: UIColor
     let profileSaveButtonBackgroundColor: UIColor
+    let sendMessageViewBackgroundColor: UIColor
 }
