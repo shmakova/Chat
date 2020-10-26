@@ -10,6 +10,8 @@ import Foundation
 
 class ThemeManager {
     private let defaults = UserDefaults.standard
+    private let queue = DispatchQueue(label: "ThemeManager", qos: .userInitiated)
+    private let mainQueue = DispatchQueue.main
     private var theme: Theme?
     
     static var shared = ThemeManager()
@@ -24,8 +26,12 @@ class ThemeManager {
             return storedTheme
         }
         set {
-            self.theme = newValue
-            defaults.set(newValue.rawValue, forKey: themeKey)
+            queue.async {
+                self.defaults.set(newValue.rawValue, forKey: themeKey)
+                self.mainQueue.async {
+                    self.theme = newValue
+                }
+            }
         }
     }
 
