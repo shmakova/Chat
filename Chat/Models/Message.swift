@@ -9,6 +9,7 @@
 import Foundation
 
 struct Message {
+    let identifier: String
     let content: String
     let created: Date
     let senderId: String
