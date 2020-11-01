@@ -6,6 +6,7 @@
 //  Copyright © 2020 Shmakova Anastasia. All rights reserved.
 //
 
+import Firebase
 import UIKit
 
 @UIApplicationMain
@@ -18,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         logApplicationState(fromState: "Not running", toState: "Inactive")
+        FirebaseApp.configure()
         return true
     }
     

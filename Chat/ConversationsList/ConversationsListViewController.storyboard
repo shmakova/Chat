@@ -8,17 +8,17 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Tinkoff Chat-->
+        <!--Channels-->
         <scene sceneID="SKR-bM-OoE">
             <objects>
-                <viewController title="Tinkoff Chat" id="Yf6-31-RD5" customClass="ConversationsListViewController" customModule="Chat" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Channels" id="Yf6-31-RD5" customClass="ConversationsListViewController" customModule="Chat" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="JVr-D0-tee">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="8pS-5A-ebD"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Tinkoff Chat" id="hhi-RZ-v1U"/>
+                    <navigationItem key="navigationItem" title="Channels" id="hhi-RZ-v1U"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4OY-cY-oUp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

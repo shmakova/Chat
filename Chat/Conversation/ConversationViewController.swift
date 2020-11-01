@@ -10,10 +10,22 @@ import UIKit
 
 final class ConversationViewController: UIViewController {
     private let cellIdentifier = String(describing: MessageTableViewCell.self)
-    private var messagesStorage: [MessageCellModel] = []
+    private let repository = MessagesRepository()
     
-    private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: view.frame, style: .plain)
+    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var messageTextField: UITextField!
+    @IBOutlet weak var sendMessageBackgroundView: UIView!
+    
+    private let currentTheme = ThemeManager.shared.currentTheme
+    private var messages: [MessageCellModel] = []
+    
+    var channel: Channel?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        navigationItem.title = channel?.name
         tableView.register(
             UINib(nibName: String(describing: MessageTableViewCell.self), bundle: nil),
             forCellReuseIdentifier: cellIdentifier
@@ -21,25 +33,87 @@ final class ConversationViewController: UIViewController {
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
         tableView.dataSource = self
-        return tableView
-    }()
-    
-    private let currentTheme = ThemeManager.shared.currentTheme
-    
-    var selectedName: String = ""
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        messagesStorage = messages.shuffled()
-        navigationItem.title = selectedName
-        view.addSubview(tableView)
+        messageTextField.rightView = makeSendButton()
+        messageTextField.rightViewMode = .whileEditing
+        messageTextField.delegate = self
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        view.addGestureRecognizer(tapGesture)
         applyTheme(currentTheme)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        guard let channel = channel else {
+            return
+        }
+        repository.addMessagesListener(channel: channel, completion: { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case let .success(messages):
+                self.messages = messages
+                self.tableView.reloadData()
+                self.tableView.scrollToBottom()
+            case let .failure(error):
+                log("Messages fetch error: \(error)")
+            }
+        })
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        repository.removeMessagesListener()
+    }
+    
+    @objc private func keyboardWillShow(notification: NSNotification) {
+        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
+            if view.frame.origin.y == 0 {
+                view.frame.origin.y -= keyboardSize.height
+            }
+        }
+    }
+
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        if view.frame.origin.y != 0 {
+            view.frame.origin.y = 0
+        }
+    }
+    
+    @objc private func dismissKeyboard() {
+        messageTextField.resignFirstResponder()
+    }
+    
+    private func makeSendButton() -> UIButton {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(named: "SendIcon"), for: .normal)
+        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -18, bottom: 0, right: 0)
+        button.frame = CGRect(x: CGFloat(messageTextField.frame.size.width - 18), y: 5, width: 18, height: 18)
+        button.addTarget(self, action: #selector(sendMessage), for: .touchUpInside)
+        return button
+    }
+    
+    @objc private func sendMessage() {
+        guard let channel = channel, let message = messageTextField.text, !message.isEmpty  else {
+            return
+        }
+        messageTextField.text = nil
+        repository.addNewMessage(
+            channel: channel,
+            message: message,
+            completion: { result in
+                switch result {
+                case .success:
+                    break
+                case let .failure(error):
+                    log("Add new message error: \(error)")
+                }
+            }
+        )
     }
 }
 
 extension ConversationViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        messagesStorage.count
+        messages.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -47,7 +121,7 @@ extension ConversationViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         cell.applyTheme(currentTheme)
-        cell.configure(with: messagesStorage[indexPath.row])
+        cell.configure(with: messages[indexPath.row])
         return cell
     }
 }
@@ -58,40 +132,45 @@ extension ConversationViewController: ThemeableView {
             overrideUserInterfaceStyle = theme.userInterfaceStyle
         }
         view.backgroundColor = theme.colors.backgroundColor
+        sendMessageBackgroundView.backgroundColor = theme.colors.sendMessageViewBackgroundColor
         tableView.backgroundColor = theme.colors.backgroundColor
         tableView.backgroundView?.backgroundColor = theme.colors.backgroundColor
         tableView.reloadData()
     }
 }
 
-private let messages: [MessageCellModel] = [
-    MessageCellModel(text: "Hi", kind: .outgoing),
-    MessageCellModel(text: "Bye", kind: .incoming),
-    MessageCellModel(text: "Hello", kind: .outgoing),
-    MessageCellModel(text: "Good bye!", kind: .outgoing),
-    MessageCellModel(text: "Good morning!", kind: .outgoing),
-    MessageCellModel(text: "Japan looks amazing!", kind: .outgoing),
-    MessageCellModel(text: "Do you know what time is it?", kind: .incoming),
-    MessageCellModel(text: "It’s morning in Tokyo ", kind: .outgoing),
-    MessageCellModel(text: "What is the most popular meal in Japan?", kind: .incoming),
-    MessageCellModel(text: "Do you like it?", kind: .incoming),
-    MessageCellModel(text: "I like it", kind: .outgoing),
-    MessageCellModel(text: "I will write you", kind: .outgoing),
-    MessageCellModel(text: "Ok, see you", kind: .incoming),
-    MessageCellModel(text: "Have a nice day", kind: .incoming),
-    MessageCellModel(text: "An suas viderer pro. Vis cu magna altera, ex his vivendo atomorum.", kind: .incoming),
-    MessageCellModel(text: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.", kind: .outgoing),
-    MessageCellModel(text: "Reprehenderit mollit excepteur labore deserunt officia laboris eiusmod cillum eu duis.", kind: .incoming),
-    MessageCellModel(text: "Aliqua mollit nisi incididunt id eu consequat eu cupidatat.", kind: .outgoing),
-    MessageCellModel(text: "It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.", kind: .incoming),
-    MessageCellModel(text: "Where are you?", kind: .outgoing),
-    MessageCellModel(text: "Aliqua mollit nisi incididunt id eu consequat eu cupidatat.", kind: .incoming),
-    MessageCellModel(text: "Voluptate irure aliquip consectetur commodo ex ex.",  kind: .outgoing),
-    MessageCellModel(text: "Dolore veniam Lorem occaecat veniam irure laborum est amet.", kind: .outgoing),
-    MessageCellModel(text: "Amet enim do laborum tempor nisi aliqua ad adipisicing.", kind: .incoming),
-    MessageCellModel(text: "Ex Lorem veniam veniam irure sunt adipisicing culpa.", kind: .outgoing),
-    MessageCellModel(text: "Voluptate irure aliquip consectetur commodo ex ex.", kind: .incoming),
-    MessageCellModel(text: "Where is the last horcrux?", kind: .outgoing),
-    MessageCellModel(text: "Dolore veniam Lorem occaecat veniam irure laborum est amet.", kind: .outgoing),
-    MessageCellModel(text: "Verni mne moj dve tyschi sedmoj", kind: .incoming)
-]
+extension ConversationViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        sendMessage()
+        return true
+    }
+}
+
+extension UITableView {
+    func scrollToBottom() {
+        DispatchQueue.main.async {
+            guard self.numberOfSections > 0 else { return }
+            var section = max(self.numberOfSections - 1, 0)
+            var row = max(self.numberOfRows(inSection: section) - 1, 0)
+            var indexPath = IndexPath(row: row, section: section)
+
+            while !self.indexPathIsValid(indexPath) {
+                section = max(section - 1, 0)
+                row = max(self.numberOfRows(inSection: section) - 1, 0)
+                indexPath = IndexPath(row: row, section: section)
+                if indexPath.section == 0 {
+                    indexPath = IndexPath(row: 0, section: 0)
+                    break
+                }
+            }
+            guard self.indexPathIsValid(indexPath) else { return }
+            self.scrollToRow(at: indexPath, at: .bottom, animated: false)
+        }
+    }
+
+    func indexPathIsValid(_ indexPath: IndexPath) -> Bool {
+        let section = indexPath.section
+        let row = indexPath.row
+        return section < self.numberOfSections && row < self.numberOfRows(inSection: section)
+    }
+}

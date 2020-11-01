@@ -9,6 +9,7 @@
 import UIKit
 
 final class ConversationsListViewController: UIViewController {
+    private let repository = ChannelsRepository()
     private let cellIdentifier = String(describing: ConversationsTableViewCell.self)
     
     private lazy var tableView: UITableView = {
@@ -23,13 +24,35 @@ final class ConversationsListViewController: UIViewController {
     }()
     
     private var currentTheme: Theme = ThemeManager.shared.currentTheme
+    private var channels: [Channel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(tableView)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: makeSettingsButton())
-        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: makeProfileButton())
+        let profileButton = UIBarButtonItem(customView: makeProfileButton())
+        let newChannelButton = UIBarButtonItem(customView: makeNewChannelButton())
+        navigationItem.rightBarButtonItems = [profileButton, newChannelButton]
         applyTheme(currentTheme)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        repository.addChannelsListener { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case let .success(channels):
+                self.channels = channels
+                self.tableView.reloadData()
+            case let .failure(error):
+                log("Channels fetch error: \(error)")
+            }
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        repository.removeChannelsListener()
     }
     
     private func makeProfileButton() -> UIButton {
@@ -44,6 +67,15 @@ final class ConversationsListViewController: UIViewController {
         profileButton.layer.cornerRadius = profileButton.bounds.width / 2
         profileButton.addTarget(self, action: #selector(openProfile), for: .touchUpInside)
         return profileButton
+    }
+    
+    private func makeNewChannelButton() -> UIButton {
+        let newChannelButton = UIButton(type: .custom)
+        let image = UIImage(named: "NewChannelIcon")
+        newChannelButton.setImage(image, for: .normal)
+        newChannelButton.frame = CGRect(x: 0, y: 0, width: 22, height: 22)
+        newChannelButton.addTarget(self, action: #selector(openNewChannelAlert), for: .touchUpInside)
+        return newChannelButton
     }
     
     private func makeSettingsButton() -> UIButton {
@@ -65,6 +97,26 @@ final class ConversationsListViewController: UIViewController {
         present(profileViewController, animated: true)
     }
     
+    @objc private func openNewChannelAlert(_ sender: Any) {
+        let alertController = UIAlertController(
+            title: "Enter channel name",
+            message: nil,
+            preferredStyle: .alert
+        )
+        alertController.addTextField()
+        alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+
+        let submitAction = UIAlertAction(title: "Create", style: .default) { [weak self] _ in
+            guard let channelName = alertController.textFields?[0].text, !channelName.isEmpty else {
+                return
+            }
+            self?.createNewChannel(name: channelName)
+        }
+
+        alertController.addAction(submitAction)
+        present(alertController, animated: true)
+    }
+    
     @objc private func openSettings(_ sender: Any) {
         guard let themesViewController = ThemesViewController.storyboardInstance() as? ThemesViewController else {
             assertionFailure()
@@ -76,19 +128,22 @@ final class ConversationsListViewController: UIViewController {
         }
         navigationController?.pushViewController(themesViewController, animated: true)
     }
+    
+    private func createNewChannel(name: String) {
+        repository.addNewChannel(name: name, completion: { result in
+            switch result {
+            case .success:
+                break
+            case let .failure(error):
+                log("Add new channel error: \(error)")
+            }
+        })
+    }
 }
 
 extension ConversationsListViewController: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        conversations.count
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        conversations[section].items.count
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return conversations[section].title
+        channels.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -96,7 +151,7 @@ extension ConversationsListViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         cell.applyTheme(currentTheme)
-        cell.configure(with: conversations[indexPath.section].items[indexPath.row])
+        cell.configure(with: channels[indexPath.row])
         return cell
     }
     
@@ -112,8 +167,8 @@ extension ConversationsListViewController: UITableViewDelegate {
             assertionFailure()
             return
         }
-        let conversation = conversations[indexPath.section].items[indexPath.row]
-        conversationViewController.selectedName = conversation.name
+        let channel = channels[indexPath.row]
+        conversationViewController.channel = channel
         navigationController?.pushViewController(conversationViewController, animated: true)
     }
 }
@@ -141,164 +196,6 @@ extension ConversationsListViewController: ThemeableView {
         tableView.reloadData()
     }
 }
-
-private struct ConversationsSection {
-    let title: String
-    let items: [ConversationCellModel]
-}
-
-private let conversations: [ConversationsSection] = [
-    ConversationsSection(
-        title: "Online",
-        items: [
-            ConversationCellModel(
-                name: "Ronald Robertson",
-                message: "An suas viderer pro. Vis cu magna altera, ex his vivendo atomorum.",
-                date: Date(),
-                isOnline: true,
-                hasUnreadMessages: true
-            ),
-            ConversationCellModel(
-                name: "Alex Petrov",
-                message: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-                date: Date(timeIntervalSinceNow: -3000),
-                isOnline: true,
-                hasUnreadMessages: true
-            ),
-            ConversationCellModel(
-                name: "Johnny Watson",
-                message: "Reprehenderit mollit excepteur labore deserunt officia laboris eiusmod cillum eu duis. Reprehenderit mollit excepteur labore deserunt officia laboris eiusmod cillum eu duis",
-                date: Date(timeIntervalSinceNow: -86400),
-                isOnline: true,
-                hasUnreadMessages: true
-            ),
-            ConversationCellModel(
-                name: "Martha Craig",
-                message: "Aliqua mollit nisi incididunt id eu consequat eu cupidatat.",
-                date: "2020/07/26 22:31".date,
-                isOnline: true,
-                hasUnreadMessages: false
-            ),
-            ConversationCellModel(
-                name: "Vera Lenina",
-                message: "Hi",
-                date: "2020/07/20 21:22".date,
-                isOnline: true,
-                hasUnreadMessages: true
-            ),
-            ConversationCellModel(
-                name: "Petr Lenin",
-                message: "",
-                date: "2020/07/18 20:42".date,
-                isOnline: true,
-                hasUnreadMessages: false
-            ),
-            ConversationCellModel(
-                name: "Sasha Petrova",
-                message: "It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
-                date: "2020/07/11 19:02".date,
-                isOnline: true,
-                hasUnreadMessages: true
-            ),
-            ConversationCellModel(
-                name: "Ekaterina Alexandrovna Konstantinova",
-                message: "Where are you?",
-                date: "2020/07/10 19:02".date,
-                isOnline: true,
-                hasUnreadMessages: true
-            ),
-            ConversationCellModel(
-                name: "Mark Cook",
-                message: "Aliqua mollit nisi incididunt id eu consequat eu cupidatat.",
-                date: "2020/07/06 00:31".date,
-                isOnline: true,
-                hasUnreadMessages: false
-            ),
-            ConversationCellModel(
-                name: "Tim Cook",
-                message: "",
-                date: "2020/06/06 08:12".date,
-                isOnline: true,
-                hasUnreadMessages: false
-            )
-        ]
-    ),
-    ConversationsSection(
-        title: "History",
-        items: [
-            ConversationCellModel(
-                name: "Arthur Bell",
-                message: "Voluptate irure aliquip consectetur commodo ex ex.",
-                date: "2020/05/18 22:31".date,
-                isOnline: false,
-                hasUnreadMessages: false
-            ),
-            ConversationCellModel(
-                name: "Jane Warren",
-                message: "Ex Lorem veniam veniam irure sunt adipisicing culpa. Ex Lorem veniam veniam irure sunt adipisicing culpa. Ex Lorem veniam veniam irure sunt adipisicing culpa.",
-                date: "2020/05/17 21:23".date,
-                isOnline: false,
-                hasUnreadMessages: false
-            ),
-            ConversationCellModel(
-                name: "Morris Henry",
-                message: "Dolore veniam Lorem occaecat veniam irure laborum est amet.",
-                date: "2020/05/17 12:32".date,
-                isOnline: false,
-                hasUnreadMessages: true
-            ),
-            ConversationCellModel(
-                name: "Irma Flores",
-                message: "Amet enim do laborum tempor nisi aliqua ad adipisicing.",
-                date: "2020/03/16 21:31".date,
-                isOnline: false,
-                hasUnreadMessages: false
-            ),
-            ConversationCellModel(
-                name: "Colin Williams",
-                message: "Ex Lorem veniam veniam irure sunt adipisicing culpa.",
-                date: "2020/03/09 11:41".date,
-                isOnline: false,
-                hasUnreadMessages: false
-            ),
-            ConversationCellModel(
-                name: "Anthonie Bellkins",
-                message: "Voluptate irure aliquip consectetur commodo ex ex.",
-                date: "2020/02/18 22:31".date,
-                isOnline: false,
-                hasUnreadMessages: false
-            ),
-            ConversationCellModel(
-                name: "Lord Voldemort",
-                message: "Where is the last horcrux?",
-                date: "2020/02/07 21:23".date,
-                isOnline: false,
-                hasUnreadMessages: false
-            ),
-            ConversationCellModel(
-                name: "Melissa Henry",
-                message: "Dolore veniam Lorem occaecat veniam irure laborum est amet. Dolore veniam Lorem occaecat veniam irure laborum est amet. Dolore veniam Lorem occaecat veniam irure laborum est amet.",
-                date: "2020/02/05 12:32".date,
-                isOnline: false,
-                hasUnreadMessages: true
-            ),
-            ConversationCellModel(
-                name: "Ira Flores",
-                message: "Dolore veniam Lorem occaecat veniam irure laborum est amet.",
-                date: "2020/01/01 21:31".date,
-                isOnline: false,
-                hasUnreadMessages: false
-            ),
-            ConversationCellModel(
-                name: "Gerard Arthur Way",
-                message: "Verni mne moj dve tyschi sedmoj",
-                date: "2007/10/09 11:41".date,
-                isOnline: false,
-                hasUnreadMessages: true
-            )
-        ]
-    )
-]
 
 private extension String {
     var date: Date {

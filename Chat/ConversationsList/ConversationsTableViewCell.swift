@@ -16,27 +16,17 @@ class ConversationsTableViewCell: UITableViewCell, ConfigurableView, ThemeableVi
     
     private var currentTheme: Theme = .classic
     
-    func configure(with model: ConversationCellModel) {
+    func configure(with model: Channel) {
         nameLabel.text = model.name
-        dateLabel.text = model.date.formatted
-        if model.message.isEmpty {
+        dateLabel.text = model.lastActivity?.formatted
+        if let message = model.lastMessage, !message.isEmpty {
+            messageLabel.text = message
+            messageLabel.textColor = currentTheme.colors.secondaryTextColor
+            dateLabel.isHidden = false
+        } else {
             messageLabel.text = "No messages yet"
             messageLabel.textColor = .red
             dateLabel.isHidden = true
-        } else {
-            messageLabel.text = model.message
-            messageLabel.textColor = currentTheme.colors.secondaryTextColor
-            dateLabel.isHidden = false
-        }
-        if model.isOnline {
-            backgroundColor = UIColor(red: 1, green: 1, blue: 0, alpha: 0.2)
-        } else {
-            backgroundColor = .clear
-        }
-        if model.hasUnreadMessages {
-            messageLabel.font = .boldSystemFont(ofSize: messageFontSize)
-        } else {
-            messageLabel.font = .systemFont(ofSize: messageFontSize)
         }
     }
     
