@@ -6,6 +6,7 @@
 //  Copyright © 2020 Shmakova Anastasia. All rights reserved.
 //
 
+import CoreData
 import UIKit
 
 final class ConversationsListViewController: UIViewController {
@@ -24,10 +25,10 @@ final class ConversationsListViewController: UIViewController {
     }()
     
     private var currentTheme: Theme = ThemeManager.shared.currentTheme
-    private var channels: [Channel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        repository.delegate = self
         view.addSubview(tableView)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: makeSettingsButton())
         let profileButton = UIBarButtonItem(customView: makeProfileButton())
@@ -38,16 +39,8 @@ final class ConversationsListViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        repository.addChannelsListener { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case let .success(channels):
-                self.channels = channels
-                self.tableView.reloadData()
-            case let .failure(error):
-                log("Channels fetch error: \(error)")
-            }
-        }
+        repository.addChannelsListener()
+        tableView.reloadData()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -143,7 +136,7 @@ final class ConversationsListViewController: UIViewController {
 
 extension ConversationsListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        channels.count
+        repository.numberOfChannels(for: section)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -151,7 +144,7 @@ extension ConversationsListViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         cell.applyTheme(currentTheme)
-        cell.configure(with: channels[indexPath.row])
+        cell.configure(with: repository.findChannel(at: indexPath))
         return cell
     }
     
@@ -167,9 +160,34 @@ extension ConversationsListViewController: UITableViewDelegate {
             assertionFailure()
             return
         }
-        let channel = channels[indexPath.row]
+        let channel = repository.findChannel(at: indexPath)
         conversationViewController.channel = channel
         navigationController?.pushViewController(conversationViewController, animated: true)
+    }
+
+    func tableView(
+        _ tableView: UITableView,
+        commit editingStyle: UITableViewCell.EditingStyle,
+        forRowAt indexPath: IndexPath
+    ) {
+        switch editingStyle {
+        case .delete:
+            repository.removeChannel(
+                channel: repository.findChannel(at: indexPath),
+                completion: { result in
+                    switch result {
+                    case .success:
+                        break
+                    case let .failure(error):
+                        log("Add new channel error: \(error)")
+                    }
+                }
+            )
+        case .insert, .none:
+            break
+        @unknown default:
+            break
+        }
     }
 }
 
@@ -194,6 +212,42 @@ extension ConversationsListViewController: ThemeableView {
         tableView.backgroundColor = theme.colors.backgroundColor
         tableView.backgroundView?.backgroundColor = theme.colors.backgroundColor
         tableView.reloadData()
+    }
+}
+
+extension ConversationsListViewController: NSFetchedResultsControllerDelegate {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.beginUpdates()
+    }
+
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.endUpdates()
+    }
+
+    func controller(
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+        didChange anObject: Any,
+        at indexPath: IndexPath?,
+        for type: NSFetchedResultsChangeType,
+        newIndexPath: IndexPath?
+    ) {
+        switch type {
+        case .insert:
+            guard let newIndexPath = newIndexPath else { return }
+            tableView.insertRows(at: [newIndexPath], with: .automatic)
+        case .move:
+            guard let indexPath = indexPath, let newIndexPath = newIndexPath else { return }
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            tableView.insertRows(at: [newIndexPath], with: .automatic)
+        case .update:
+            guard let indexPath = indexPath else { return }
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        case .delete:
+            guard let indexPath = indexPath else { return }
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        @unknown default:
+            fatalError()
+        }
     }
 }
 

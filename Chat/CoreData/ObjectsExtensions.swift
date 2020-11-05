@@ -21,6 +21,18 @@ extension ChannelDb {
             .joined(separator: "\n") ?? ""
         return description + messages
     }
+
+    var channel: Channel {
+        guard let identifier = identifier, let name = name else {
+            fatalError()
+        }
+        return Channel(
+            identifier: identifier,
+            name: name,
+            lastMessage: lastMessage,
+            lastActivity: lastActivity
+        )
+    }
     
     convenience init(channel: Channel, in context: NSManagedObjectContext) {
         self.init(context: context)
@@ -38,6 +50,23 @@ extension MessageDb {
             + "created: \(String(describing: created)), "
             + "senderId: \(String(describing: senderId)), "
             + "senderName: \(String(describing: senderName))"
+    }
+
+    var message: Message {
+        guard let identifier = identifier,
+            let content = content,
+            let created = created,
+            let senderId = senderId,
+            let senderName = senderName else {
+            fatalError()
+        }
+        return Message(
+            identifier: identifier,
+            content: content,
+            created: created,
+            senderId: senderId,
+            senderName: senderName
+        )
     }
     
     convenience init(message: Message, in context: NSManagedObjectContext) {

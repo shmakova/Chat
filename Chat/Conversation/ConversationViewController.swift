@@ -6,6 +6,7 @@
 //  Copyright © 2020 Shmakova Anastasia. All rights reserved.
 //
 
+import CoreData
 import UIKit
 
 final class ConversationViewController: UIViewController {
@@ -17,12 +18,12 @@ final class ConversationViewController: UIViewController {
     @IBOutlet weak var sendMessageBackgroundView: UIView!
     
     private let currentTheme = ThemeManager.shared.currentTheme
-    private var messages: [MessageCellModel] = []
     
     var channel: Channel?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        repository.delegate = self
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         navigationItem.title = channel?.name
@@ -46,17 +47,9 @@ final class ConversationViewController: UIViewController {
         guard let channel = channel else {
             return
         }
-        repository.addMessagesListener(channel: channel, completion: { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case let .success(messages):
-                self.messages = messages
-                self.tableView.reloadData()
-                self.tableView.scrollToBottom()
-            case let .failure(error):
-                log("Messages fetch error: \(error)")
-            }
-        })
+        repository.addMessagesListener(channel: channel)
+        tableView.reloadData()
+        tableView.scrollToBottom()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -113,7 +106,7 @@ final class ConversationViewController: UIViewController {
 
 extension ConversationViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        messages.count
+        repository.numberOfMessages(for: section)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -121,8 +114,45 @@ extension ConversationViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         cell.applyTheme(currentTheme)
-        cell.configure(with: messages[indexPath.row])
+        cell.configure(with: repository.findMessage(at: indexPath))
         return cell
+    }
+}
+
+extension ConversationViewController: NSFetchedResultsControllerDelegate {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.beginUpdates()
+    }
+
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.endUpdates()
+        tableView.scrollToBottom()
+    }
+
+    func controller(
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+        didChange anObject: Any,
+        at indexPath: IndexPath?,
+        for type: NSFetchedResultsChangeType,
+        newIndexPath: IndexPath?
+    ) {
+        switch type {
+        case .insert:
+            guard let newIndexPath = newIndexPath else { return }
+            tableView.insertRows(at: [newIndexPath], with: .automatic)
+        case .move:
+            guard let indexPath = indexPath, let newIndexPath = newIndexPath else { return }
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            tableView.insertRows(at: [newIndexPath], with: .automatic)
+        case .update:
+            guard let indexPath = indexPath else { return }
+            tableView.reloadRows(at: [indexPath], with: .automatic)
+        case .delete:
+            guard let indexPath = indexPath else { return }
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        @unknown default:
+            fatalError()
+        }
     }
 }
 

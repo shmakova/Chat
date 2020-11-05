@@ -25,7 +25,7 @@ final class CoreDataStack {
     
     private let dataModelName = "Chat"
     private let dataModelExtension = "momd"
-    
+
     // MARK: - init Stack
     
     private(set) lazy var managedObjectModel: NSManagedObjectModel = {
@@ -67,7 +67,7 @@ final class CoreDataStack {
         return context
     }()
     
-    private lazy var mainContext: NSManagedObjectContext = {
+    private(set) lazy var mainContext: NSManagedObjectContext = {
         let context = NSManagedObjectContext(concurrencyType: .mainQueueConcurrencyType)
         context.parent = writterContext
         context.automaticallyMergesChangesFromParent = true
@@ -99,6 +99,7 @@ final class CoreDataStack {
     private func performSave(in context: NSManagedObjectContext) {
         context.performAndWait {
             do {
+                try context.obtainPermanentIDs(for: Array(context.insertedObjects))
                 try context.save()
             } catch {
                 assertionFailure(error.localizedDescription)
