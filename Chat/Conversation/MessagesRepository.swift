@@ -6,6 +6,7 @@
 //  Copyright © 2020 Shmakova Anastasia. All rights reserved.
 //
 
+import CoreData
 import Firebase
 import Foundation
 
@@ -16,6 +17,7 @@ final class MessagesRepository {
     
     private lazy var db = Firestore.firestore()
     private lazy var reference = db.collection("channels")
+    private lazy var coreDataStack = CoreDataStack.shared
     
     private var listeners: [ListenerRegistration] = []
     
@@ -40,17 +42,18 @@ final class MessagesRepository {
                     completion(.failure(error))
                     return
                 }
-                self?.operationQueue.addOperation {
-                    let messages = snapshot?.documents
-                        .compactMap { $0.message }
-                        .map {
-                            MessageCellModel(
-                                message: $0,
-                                kind: self?.deviceIDProvider.deviceID == $0.senderId ? .outgoing : .incoming
-                            )
+                guard let self = self else { return }
+                self.operationQueue.addOperation {
+                    let messages = snapshot?.documents.compactMap { $0.message } ?? []
+                    self.saveMessages(messages, channel: channel)
+                    let messageCellModels = messages.map {
+                        MessageCellModel(
+                            message: $0,
+                            kind: self.deviceIDProvider.deviceID == $0.senderId ? .outgoing : .incoming
+                        )
                     }
-                    self?.mainQueue.addOperation {
-                        completion(.success(messages ?? []))
+                    self.mainQueue.addOperation {
+                        completion(.success(messageCellModels))
                     }
                 }
         }
@@ -85,6 +88,22 @@ final class MessagesRepository {
                 completion(.success(()))
         }
     }
+    
+    private func saveMessages(_ messages: [Message], channel: Channel) {
+        assert(!Thread.isMainThread)
+        let request: NSFetchRequest<ChannelDb> = ChannelDb.fetchRequest()
+        request.predicate = NSPredicate(format: "identifier = %@", channel.identifier)
+        coreDataStack.performSave { context in
+            guard let fetchedResults = try? context.fetch(request), let channelDb = fetchedResults.first else {
+                return
+            }
+            channelDb.messages?
+                .compactMap { $0 as? NSManagedObject }
+                .forEach { context.delete($0) }
+            let messagesDb = messages.map { MessageDb(message: $0, in: context) }
+            channelDb.messages = NSSet(array: messagesDb)
+        }
+    }
 }
 
 private extension QueryDocumentSnapshot {
@@ -94,10 +113,10 @@ private extension QueryDocumentSnapshot {
             let created = (messageData["created"] as? Timestamp)?.dateValue(),
             let senderId = messageData["senderId"] as? String,
             let senderName = messageData["senderName"] as? String else {
-                log("Invalid message data \(messageData)")
                 return nil
         }
         return Message(
+            identifier: documentID,
             content: content,
             created: created,
             senderId: senderId,

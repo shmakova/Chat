@@ -19,6 +19,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         logApplicationState(fromState: "Not running", toState: "Inactive")
+        CoreDataStack.shared.didUpdateDatabase = { stack in
+            stack.printDatabaseStatistics()
+        }
+        CoreDataStack.shared.enableObservers()
         FirebaseApp.configure()
         return true
     }

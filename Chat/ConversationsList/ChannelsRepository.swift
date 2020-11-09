@@ -15,6 +15,7 @@ final class ChannelsRepository {
     
     private lazy var db = Firestore.firestore()
     private lazy var reference = db.collection("channels")
+    private lazy var coreDataStack = CoreDataStack.shared
     
     private var listeners: [ListenerRegistration] = []
     
@@ -35,12 +36,14 @@ final class ChannelsRepository {
                     completion(.failure(error))
                     return
                 }
-                self?.operationQueue.addOperation {
+                guard let self = self else { return }
+                self.operationQueue.addOperation {
                     let channels = snapshot?.documents
                         .compactMap { $0.channel }
-                        .sorted(by: { ($0.lastActivity ?? .distantPast) > ($1.lastActivity ?? .distantPast) })
-                    self?.mainQueue.addOperation {
-                        completion(.success(channels ?? []))
+                        .sorted(by: { ($0.lastActivity ?? .distantPast) > ($1.lastActivity ?? .distantPast) }) ?? []
+                    self.saveChannels(channels)
+                    self.mainQueue.addOperation {
+                        completion(.success(channels))
                     }
                 }
         }
@@ -63,13 +66,21 @@ final class ChannelsRepository {
             completion(.success(()))
         }
     }
+    
+    private func saveChannels(_ channels: [Channel]) {
+        assert(!Thread.isMainThread)
+        coreDataStack.performSave { context in
+            channels.forEach {
+                _ = ChannelDb(channel: $0, in: context)
+            }
+        }
+    }
 }
 
 private extension QueryDocumentSnapshot {
     var channel: Channel? {
         let channelData = data()
         guard let name = channelData["name"] as? String, !name.isEmpty else {
-            log("Empty name \(channelData)")
             return nil
         }
         return Channel(
