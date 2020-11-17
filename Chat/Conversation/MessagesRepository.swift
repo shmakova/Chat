@@ -11,9 +11,11 @@ import Firebase
 import Foundation
 
 final class MessagesRepository {
+    weak var delegate: NSFetchedResultsControllerDelegate?
+    
     private let deviceIDProvider: DeviceIDProvider
     private let operationQueue = OperationQueue()
-    private let mainQueue = OperationQueue.main
+    private let fetchedResultsController: NSFetchedResultsController<MessageDb>
     
     private lazy var db = Firestore.firestore()
     private lazy var reference = db.collection("channels")
@@ -26,12 +28,27 @@ final class MessagesRepository {
         operationQueue.name = "MessagesRepository"
         operationQueue.maxConcurrentOperationCount = 1
         operationQueue.qualityOfService = .userInitiated
+        let request: NSFetchRequest<MessageDb> = MessageDb.fetchRequest()
+        let sort = NSSortDescriptor(key: "created", ascending: true)
+        request.sortDescriptors = [sort]
+        fetchedResultsController = NSFetchedResultsController(
+            fetchRequest: request,
+            managedObjectContext: CoreDataStack.shared.mainContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
     }
     
-    func addMessagesListener(channel: Channel, completion: @escaping (Result<[MessageCellModel], Error>) -> Void) {
+    func addMessagesListener(channel: Channel) {
         guard listeners.isEmpty else {
             return
         }
+        fetchedResultsController.fetchRequest.predicate = NSPredicate(
+            format: "channel.identifier = %@",
+            channel.identifier
+        )
+        fetchedResultsController.delegate = delegate
+        try? fetchedResultsController.performFetch()
         let listener = reference.document(channel.identifier)
             .collection("messages")
             .order(by: "created")
@@ -39,22 +56,13 @@ final class MessagesRepository {
             .addSnapshotListener { [weak self] (snapshot, error) in
                 log("Messages update")
                 if let error = error {
-                    completion(.failure(error))
+                    log("Messages fetch error: \(error)")
                     return
                 }
                 guard let self = self else { return }
                 self.operationQueue.addOperation {
                     let messages = snapshot?.documents.compactMap { $0.message } ?? []
                     self.saveMessages(messages, channel: channel)
-                    let messageCellModels = messages.map {
-                        MessageCellModel(
-                            message: $0,
-                            kind: self.deviceIDProvider.deviceID == $0.senderId ? .outgoing : .incoming
-                        )
-                    }
-                    self.mainQueue.addOperation {
-                        completion(.success(messageCellModels))
-                    }
                 }
         }
         listeners.append(listener)
@@ -88,6 +96,19 @@ final class MessagesRepository {
                 completion(.success(()))
         }
     }
+
+    func numberOfMessages(for section: Int) -> Int {
+        let sectionInfo = fetchedResultsController.sections?[section]
+        return sectionInfo?.numberOfObjects ?? 0
+    }
+
+    func findMessage(at indexPath: IndexPath) -> MessageCellModel {
+        let message = fetchedResultsController.object(at: indexPath).message
+        return MessageCellModel(
+            message: message,
+            kind: deviceIDProvider.deviceID == message.senderId ? .outgoing : .incoming
+        )
+    }
     
     private func saveMessages(_ messages: [Message], channel: Channel) {
         assert(!Thread.isMainThread)
@@ -97,11 +118,14 @@ final class MessagesRepository {
             guard let fetchedResults = try? context.fetch(request), let channelDb = fetchedResults.first else {
                 return
             }
-            channelDb.messages?
-                .compactMap { $0 as? NSManagedObject }
-                .forEach { context.delete($0) }
-            let messagesDb = messages.map { MessageDb(message: $0, in: context) }
-            channelDb.messages = NSSet(array: messagesDb)
+            messages.forEach {
+                let request: NSFetchRequest<MessageDb> = MessageDb.fetchRequest()
+                request.predicate = NSPredicate(format: "identifier = %@", $0.identifier)
+                if let fetchedResults = try? context.fetch(request), fetchedResults.first == nil {
+                    let message = MessageDb(message: $0, in: context)
+                    message.channel = channelDb
+                }
+            }
         }
     }
 }
