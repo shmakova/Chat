@@ -13,6 +13,7 @@ protocol PresentationAssemblyProtocol {
     func conversationsListViewController() -> UIViewController
     func conversationViewController(channel: Channel) -> UIViewController
     func profileViewController() -> UIViewController
+    func imagesViewController(onImagePicked: @escaping (ImageCellModel) -> Void) -> UIViewController
     func themesViewController(onThemePicked: @escaping (Theme) -> Void) -> UIViewController
 }
 
@@ -47,7 +48,18 @@ class PresentationAssembly: PresentationAssemblyProtocol {
             fatalError()
         }
         vc.modalPresentationStyle = .pageSheet
+        vc.presentationAssembly = self
         vc.model = profileModel()
+        return vc
+    }
+    
+    func imagesViewController(onImagePicked: @escaping (ImageCellModel) -> Void) -> UIViewController {
+        guard let vc = ImagesViewController.storyboardInstance() as? ImagesViewController else {
+            fatalError()
+        }
+        vc.modalPresentationStyle = .pageSheet
+        vc.onImagePicked = onImagePicked
+        vc.model = imagesModel()
         return vc
     }
     
@@ -82,7 +94,15 @@ class PresentationAssembly: PresentationAssemblyProtocol {
         return ProfileModel(
             themeService: servicesAssembly.themeService,
             gcdProfileDataService: servicesAssembly.gcdProfileDataService,
-            operationProfileDataService: servicesAssembly.operationProfileDataService
+            operationProfileDataService: servicesAssembly.operationProfileDataService,
+            imagesService: servicesAssembly.imagesService
+        )
+    }
+    
+    private func imagesModel() -> ImagesModelProtocol {
+        return ImagesModel(
+            themeService: servicesAssembly.themeService,
+            imagesService: servicesAssembly.imagesService
         )
     }
 }

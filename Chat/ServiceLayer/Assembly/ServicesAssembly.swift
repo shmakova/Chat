@@ -14,6 +14,7 @@ protocol ServicesAssemblyProtocol {
     var gcdProfileDataService: ProfileDataServiceProtocol { get }
     var operationProfileDataService: ProfileDataServiceProtocol { get }
     var themeService: ThemeServiceProtocol { get }
+    var imagesService: ImagesServiceProtocol { get }
 }
 
 class ServicesAssembly: ServicesAssemblyProtocol {
@@ -45,6 +46,12 @@ class ServicesAssembly: ServicesAssemblyProtocol {
     
     lazy var themeService: ThemeServiceProtocol = ThemeService(
         settings: coreAssembly.settings
+    )
+    
+    lazy var imagesService: ImagesServiceProtocol = ImagesService(
+        requestSender: coreAssembly.requestSender,
+        imagesRequestConfig: coreAssembly.imagesRequestConfig,
+        imageLoader: coreAssembly.imageLoader
     )
     
     private lazy var fileProfileDataService: ProfileDataServiceProtocol = FileProfileDataService(
