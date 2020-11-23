@@ -14,6 +14,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     
+    private let rootAssembly = RootAssembly()
+    
     func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -24,6 +26,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         CoreDataStack.shared.enableObservers()
         FirebaseApp.configure()
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        let navigationController = UINavigationController()
+        let controller = rootAssembly.presentationAssembly.conversationsListViewController()
+        navigationController.viewControllers = [controller]
+        window?.rootViewController = navigationController
+        window?.makeKeyAndVisible()
         return true
     }
     
