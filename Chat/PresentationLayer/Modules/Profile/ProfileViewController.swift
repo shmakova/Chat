@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ProfileViewController: UIViewController {
+class ProfileViewController: BaseViewController {
     
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var avatarInitialsView: UILabel!
@@ -16,12 +16,14 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var gcdSaveButton: UIButton!
     @IBOutlet weak var operationSaveButton: UIButton!
     @IBOutlet weak var navigationBar: UINavigationBar!
-    @IBOutlet weak var editProfileButton: UIBarButtonItem!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var editNameTextField: UITextField!
     @IBOutlet weak var infoLabel: UILabel!
     @IBOutlet weak var editInfoTextView: UITextView!
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
+    
+    private var editProfileButton: UIBarButtonItem?
+    private var isProfileEditing = false
     
     var model: ProfileModelProtocol!
     var presentationAssembly: PresentationAssemblyProtocol!
@@ -67,6 +69,8 @@ class ProfileViewController: UIViewController {
         hideAllViews()
         logViewControllerState()
         log("Save button frame \(gcdSaveButton.frame)")
+        editProfileButton = UIBarButtonItem(customView: makeEditButton())
+        navigationBar.topItem?.rightBarButtonItem = editProfileButton
         avatarImageView.layer.cornerRadius = avatarImageView.bounds.width / 2
         gcdSaveButton.layer.cornerRadius = 14
         operationSaveButton.layer.cornerRadius = 14
@@ -118,9 +122,9 @@ class ProfileViewController: UIViewController {
         dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func onEditProfileTap(_ sender: Any) {
-        enableSaveButtons(isEnabled: false)
-        showViews(isEdit: true)
+    @objc private func onEditProfileTap(_ sender: Any) {
+        showViews(isEdit: !isProfileEditing)
+        enableSaveButtons(isEnabled: wasProfileEdited)
     }
     
     @IBAction func onEditAvatarTap(_ sender: Any) {
@@ -148,6 +152,18 @@ class ProfileViewController: UIViewController {
     
     @IBAction func onOperationSaveTap(_ sender: Any) {
         saveProfile(method: .operation)
+    }
+    
+    private func makeEditButton() -> UIButton {
+        let editButton = UIButton(type: .custom)
+        editButton.setTitleColor(view.tintColor, for: .normal)
+        editButton.setTitle("Edit", for: .normal)
+        editButton.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        editButton.layer.borderColor = view.tintColor.cgColor
+        editButton.layer.borderWidth = 1
+        editButton.layer.cornerRadius = 8
+        editButton.addTarget(self, action: #selector(onEditProfileTap), for: .touchUpInside)
+        return editButton
     }
     
     private func saveProfile(method: ProfileDataManagerMethod) {
@@ -265,11 +281,12 @@ class ProfileViewController: UIViewController {
         infoLabel.isHidden = true
         editInfoTextView.isHidden = true
         activityIndicatorView.isHidden = true
-        editProfileButton.isEnabled = false
+        editProfileButton?.isEnabled = false
     }
     
     private func showViews(isEdit: Bool) {
-        editProfileButton.isEnabled = true
+        isProfileEditing = isEdit
+        editProfileButton?.isEnabled = true
         avatarImageView.isHidden = false
         avatarEditButton.isHidden = !isEdit
         gcdSaveButton.isHidden = !isEdit
@@ -278,6 +295,13 @@ class ProfileViewController: UIViewController {
         nameLabel.isHidden = isEdit
         editInfoTextView.isHidden = !isEdit
         infoLabel.isHidden = isEdit
+        let editButtonView = editProfileButton?.customView
+        if isEdit {
+            editButtonView?.layer.add(.buttonAnimation, forKey: "buttonAnimation")
+        } else {
+            editButtonView?.layer.removeAllAnimations()
+            editButtonView?.transform = .identity
+        }
     }
     
     private func enableSaveButtons(isEnabled: Bool) {

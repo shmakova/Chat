@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class ThemesViewController: UIViewController {
+final class ThemesViewController: BaseViewController {
     @IBOutlet weak var classicThemeButton: ThemeButton!
     @IBOutlet weak var dayThemeButton: ThemeButton!
     @IBOutlet weak var darkThemeButton: ThemeButton!

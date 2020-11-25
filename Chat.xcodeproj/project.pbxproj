@@ -74,6 +74,9 @@
 		3BE60F292565D42100FCA567 /* ImageCellModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE60F282565D42100FCA567 /* ImageCellModel.swift */; };
 		3BE60F4C2566F21B00FCA567 /* ImageLoaderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE60F4B2566F21B00FCA567 /* ImageLoaderProtocol.swift */; };
 		3BE60F4E2566F22900FCA567 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE60F4D2566F22900FCA567 /* ImageLoader.swift */; };
+		3BE60F51256D9A4A00FCA567 /* Animations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE60F50256D9A4900FCA567 /* Animations.swift */; };
+		3BE60F57256EEDC000FCA567 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE60F56256EEDC000FCA567 /* BaseViewController.swift */; };
+		3BE60F59256EF68000FCA567 /* CustomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE60F58256EF68000FCA567 /* CustomTransition.swift */; };
 		3BED3F06252E5DD600405047 /* ThemeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BED3F05252E5DD600405047 /* ThemeService.swift */; };
 		3BED3F08252E61AD00405047 /* ThemeableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BED3F07252E61AD00405047 /* ThemeableView.swift */; };
 		3BED3F0A253644F400405047 /* GCDProfileDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BED3F09253644F400405047 /* GCDProfileDataService.swift */; };
@@ -163,6 +166,9 @@
 		3BE60F282565D42100FCA567 /* ImageCellModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCellModel.swift; sourceTree = "<group>"; };
 		3BE60F4B2566F21B00FCA567 /* ImageLoaderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoaderProtocol.swift; sourceTree = "<group>"; };
 		3BE60F4D2566F22900FCA567 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		3BE60F50256D9A4900FCA567 /* Animations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Animations.swift; sourceTree = "<group>"; };
+		3BE60F56256EEDC000FCA567 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		3BE60F58256EF68000FCA567 /* CustomTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTransition.swift; sourceTree = "<group>"; };
 		3BED3F05252E5DD600405047 /* ThemeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeService.swift; sourceTree = "<group>"; };
 		3BED3F07252E61AD00405047 /* ThemeableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeableView.swift; sourceTree = "<group>"; };
 		3BED3F09253644F400405047 /* GCDProfileDataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GCDProfileDataService.swift; sourceTree = "<group>"; };
@@ -347,6 +353,7 @@
 		3B433FF6255C59A200EDCCAD /* Modules */ = {
 			isa = PBXGroup;
 			children = (
+				3BE60F4F256D946600FCA567 /* Animations */,
 				3B433FFE255D39F400EDCCAD /* Common */,
 				3B433FF7255C5A0700EDCCAD /* Launch */,
 				3BF0E69A2523EE6A00C3E947 /* ConversationsList */,
@@ -524,6 +531,16 @@
 				3BE60F4D2566F22900FCA567 /* ImageLoader.swift */,
 			);
 			path = ImageLoader;
+			sourceTree = "<group>";
+		};
+		3BE60F4F256D946600FCA567 /* Animations */ = {
+			isa = PBXGroup;
+			children = (
+				3BE60F50256D9A4900FCA567 /* Animations.swift */,
+				3BE60F56256EEDC000FCA567 /* BaseViewController.swift */,
+				3BE60F58256EF68000FCA567 /* CustomTransition.swift */,
+			);
+			path = Animations;
 			sourceTree = "<group>";
 		};
 		3BF0E6992523EE5400C3E947 /* Profile */ = {
@@ -719,6 +736,7 @@
 				3BF0E68F2523AEAD00C3E947 /* ConversationsTableViewCell.swift in Sources */,
 				3B26C2FF25476BFB0043101E /* ObjectsExtensions.swift in Sources */,
 				3B433FF5255C176E00EDCCAD /* PresentationAssembly.swift in Sources */,
+				3BE60F51256D9A4A00FCA567 /* Animations.swift in Sources */,
 				3B433FF2255C174000EDCCAD /* ServicesAssembly.swift in Sources */,
 				3B33D22F250D053000355849 /* ProfileViewController.swift in Sources */,
 				3BE60E50255DE29700FCA567 /* UITableViewExtensions.swift in Sources */,
@@ -738,10 +756,12 @@
 				3B43400A255D3FC400EDCCAD /* ChannelsServiceProtocol.swift in Sources */,
 				3B041EE2252E3B1D00F96349 /* ThemesPickerDelegate.swift in Sources */,
 				3BE60F0E2565BDA500FCA567 /* ImageCollectionViewCell.swift in Sources */,
+				3BE60F57256EEDC000FCA567 /* BaseViewController.swift in Sources */,
 				3BD745C82524AA1B00D78EEE /* MessageTableViewCell.swift in Sources */,
 				3B041EDE252E2A5A00F96349 /* ThemeButtonModel.swift in Sources */,
 				3BF0E68825213AC500C3E947 /* ConversationsListViewController.swift in Sources */,
 				3BF0E68C2523A88900C3E947 /* UIViewControllerExtensions.swift in Sources */,
+				3BE60F59256EF68000FCA567 /* CustomTransition.swift in Sources */,
 				3B041EDA252D250000F96349 /* ThemeButton.swift in Sources */,
 				3B434005255D3D9B00EDCCAD /* ThemeServiceProtocol.swift in Sources */,
 				3BED3F08252E61AD00405047 /* ThemeableView.swift in Sources */,

@@ -9,7 +9,7 @@
 import CoreData
 import UIKit
 
-final class ConversationViewController: UIViewController {
+final class ConversationViewController: BaseViewController {
     private let cellIdentifier = String(describing: MessageTableViewCell.self)
     
     @IBOutlet weak var tableView: UITableView!

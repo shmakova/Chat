@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ImagesViewController: UIViewController {
+class ImagesViewController: BaseViewController {
     private let cellIdentifier = String(describing: ImageCollectionViewCell.self)
     private let sectionInsets = UIEdgeInsets(
         top: 8,

@@ -9,7 +9,7 @@
 import CoreData
 import UIKit
 
-final class ConversationsListViewController: UIViewController {
+final class ConversationsListViewController: BaseViewController {
     private let cellIdentifier = String(describing: ConversationsTableViewCell.self)
     
     private lazy var tableView: UITableView = {
@@ -81,7 +81,9 @@ final class ConversationsListViewController: UIViewController {
     }
     
     @objc private func openProfile(_ sender: Any) {
-        present(presentationAssembly.profileViewController(), animated: true)
+        let profileViewController = presentationAssembly.profileViewController()
+        profileViewController.transitioningDelegate = self
+        present(profileViewController, animated: true)
     }
     
     @objc private func openNewChannelAlert(_ sender: Any) {
@@ -218,6 +220,16 @@ extension ConversationsListViewController: NSFetchedResultsControllerDelegate {
         @unknown default:
             fatalError()
         }
+    }
+}
+
+extension ConversationsListViewController: UIViewControllerTransitioningDelegate {
+    func animationController(
+        forPresented presented: UIViewController,
+        presenting: UIViewController,
+        source: UIViewController
+    ) -> UIViewControllerAnimatedTransitioning? {
+        return CustomTransition(originFrame: view.frame)
     }
 }
 
