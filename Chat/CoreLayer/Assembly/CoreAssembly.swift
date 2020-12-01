@@ -16,6 +16,9 @@ protocol CoreAssemblyProtocol {
     var deviceDataProvider: DeviceDataProviderProtocol { get }
     var fileStorage: FileStorageProtocol { get }
     var settings: SettingsProtocol { get }
+    var requestSender: RequestSenderProtocol { get }
+    var imagesRequestConfig: RequestConfig<ImagesParser> { get }
+    var imageLoader: ImageLoaderProtocol { get }
 }
 
 class CoreAssembly: CoreAssemblyProtocol {
@@ -23,20 +26,39 @@ class CoreAssembly: CoreAssemblyProtocol {
     
     lazy var firestoreNetwork: NetworkProtocol = FirestoreNetwork(
         db: Firestore.firestore(),
-        operationQueue: operationQueue,
+        operationQueue: serialOperationQueue,
         deviceDataProvider: deviceDataProvider
     )
     
     lazy var deviceDataProvider: DeviceDataProviderProtocol = DeviceDataProvider()
     
-    lazy var fileStorage: FileStorageProtocol = FileStorage(fileManager: FileManager.default)
+    lazy var fileStorage: FileStorageProtocol = FileStorage(fileManager: .default)
     
-    lazy var settings: SettingsProtocol = Settings(userDefaults: UserDefaults.standard)
+    lazy var settings: SettingsProtocol = Settings(userDefaults: .standard)
     
-    private lazy var operationQueue: OperationQueue = {
+    lazy var imagesRequestConfig: RequestConfig<ImagesParser> = RequestConfig<ImagesParser>(
+        request: ImagesRequest(apiKey: "19172184-b6befc45e5420fbf206d05bd7"),
+        parser: ImagesParser()
+    )
+    
+    lazy var requestSender: RequestSenderProtocol = RequestSender(session: .shared)
+    
+    lazy var imageLoader: ImageLoaderProtocol = ImageLoader(
+        operationQueue: concurrentOperationQueue,
+        mainQueue: .main
+    )
+    
+    private lazy var serialOperationQueue: OperationQueue = {
         let operationQueue = OperationQueue()
         operationQueue.name = "Core Queue"
         operationQueue.maxConcurrentOperationCount = 1
+        operationQueue.qualityOfService = .userInitiated
+        return operationQueue
+    }()
+    
+    private lazy var concurrentOperationQueue: OperationQueue = {
+        let operationQueue = OperationQueue()
+        operationQueue.name = "Core Concurrent Queue"
         operationQueue.qualityOfService = .userInitiated
         return operationQueue
     }()

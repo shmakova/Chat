@@ -24,6 +24,7 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
     
     var model: ProfileModelProtocol!
+    var presentationAssembly: PresentationAssemblyProtocol!
     
     private var currentProfile: ProfileData = .empty {
         didSet {
@@ -132,6 +133,7 @@ class ProfileViewController: UIViewController {
             UIAlertAction(title: "Pick a photo from gallery", style: .default, handler: pickPhotoFromGallery)
         )
         alertController.addAction(UIAlertAction(title: "Take a photo", style: .default, handler: takePhoto))
+        alertController.addAction(UIAlertAction(title: "Download", style: .default, handler: downloadPhoto))
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         present(alertController, animated: true)
     }
@@ -188,6 +190,27 @@ class ProfileViewController: UIViewController {
             )
         )
         return alert
+    }
+    
+    private func downloadPhoto(action: UIAlertAction) {
+        let vc = presentationAssembly.imagesViewController(
+            onImagePicked: { [weak self] in
+                self?.onImagePicked(model: $0)
+            }
+        )
+        present(vc, animated: true)
+    }
+    
+    private func onImagePicked(model: ImageCellModel) {
+        self.model.loadImage(model: model, completion: { [weak self] in
+            switch $0 {
+            case let .success(image):
+                self?.showAvatar(image: image)
+                self?.enableSaveButtons(isEnabled: self?.wasProfileEdited ?? false)
+            case let .failure(error):
+                log("Load image error \(error)")
+            }
+        })
     }
     
     private func pickPhotoFromGallery(action: UIAlertAction) {

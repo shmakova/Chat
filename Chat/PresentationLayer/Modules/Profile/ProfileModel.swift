@@ -6,7 +6,7 @@
 //  Copyright © 2020 Shmakova Anastasia. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 protocol ProfileModelProtocol {
     var delegate: ProfileViewControllerDelegate? { get set }
@@ -17,6 +17,7 @@ protocol ProfileModelProtocol {
         currentProfile: ProfileData,
         unsavedProfile: ProfileData
     )
+    func loadImage(model: ImageCellModel, completion: @escaping (Result<UIImage, Error>) -> Void)
 }
 
 protocol ProfileViewControllerDelegate: class {
@@ -31,6 +32,7 @@ class ProfileModel: ProfileModelProtocol {
     private let themeService: ThemeServiceProtocol
     private let gcdProfileDataService: ProfileDataServiceProtocol
     private let operationProfileDataService: ProfileDataServiceProtocol
+    private let imagesService: ImagesServiceProtocol
     
     weak var delegate: ProfileViewControllerDelegate?
     
@@ -41,11 +43,13 @@ class ProfileModel: ProfileModelProtocol {
     init(
         themeService: ThemeServiceProtocol,
         gcdProfileDataService: ProfileDataServiceProtocol,
-        operationProfileDataService: ProfileDataServiceProtocol
+        operationProfileDataService: ProfileDataServiceProtocol,
+        imagesService: ImagesServiceProtocol
     ) {
         self.themeService = themeService
         self.gcdProfileDataService = gcdProfileDataService
         self.operationProfileDataService = operationProfileDataService
+        self.imagesService = imagesService
     }
     
     func loadProfile() {
@@ -73,5 +77,9 @@ class ProfileModel: ProfileModelProtocol {
                 self?.delegate?.handleSaveProfileResult($0, profile: unsavedProfile)
             }
         )
+    }
+    
+    func loadImage(model: ImageCellModel, completion: @escaping (Result<UIImage, Error>) -> Void) {
+        imagesService.loadImage(model: model, completion: completion)
     }
 }
