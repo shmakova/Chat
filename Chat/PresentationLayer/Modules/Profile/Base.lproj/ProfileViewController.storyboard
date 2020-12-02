@@ -48,6 +48,7 @@
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Enter your name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MNd-MN-2xg">
                                         <rect key="frame" x="0.0" y="0.0" width="240" height="34"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="profile_name_text_field"/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="FHM-Ss-uEF"/>
                                         </constraints>
@@ -94,6 +95,7 @@
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Toq-4u-7tI">
                                         <rect key="frame" x="0.0" y="0.0" width="240" height="56"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                        <accessibility key="accessibilityConfiguration" identifier="profile_info_text_view"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="56" id="shB-ii-yxR"/>
                                             <constraint firstAttribute="width" constant="240" id="x3L-zi-iGe"/>

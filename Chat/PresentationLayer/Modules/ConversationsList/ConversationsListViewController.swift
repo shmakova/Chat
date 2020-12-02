@@ -53,6 +53,7 @@ final class ConversationsListViewController: BaseViewController {
             UIColor(red: 0.212, green: 0.216, blue: 0.22, alpha: 1),
             for: .normal
         )
+        profileButton.accessibilityIdentifier = "profile_button"
         profileButton.setTitle("MD", for: .normal)
         profileButton.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
         profileButton.layer.backgroundColor = UIColor(red: 0.894, green: 0.908, blue: 0.17, alpha: 1).cgColor

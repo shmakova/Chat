@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct ProfileData {
+struct ProfileData: Equatable {
     static let empty = ProfileData(
         name: "",
         info: "",
