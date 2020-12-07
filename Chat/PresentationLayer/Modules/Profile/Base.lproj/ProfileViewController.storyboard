@@ -25,11 +25,6 @@
                                                 <action selector="onCloseTap:" destination="BYZ-38-t0r" id="jm1-eQ-nfC"/>
                                             </connections>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" title="Edit" id="aL9-Ef-VWJ">
-                                            <connections>
-                                                <action selector="onEditProfileTap:" destination="BYZ-38-t0r" id="SwY-ME-Uin"/>
-                                            </connections>
-                                        </barButtonItem>
                                     </navigationItem>
                                 </items>
                             </navigationBar>
@@ -192,7 +187,6 @@
                         <outlet property="avatarInitialsView" destination="h4O-rh-vrM" id="eon-tQ-IGx"/>
                         <outlet property="editInfoTextView" destination="Toq-4u-7tI" id="vwp-TP-fAL"/>
                         <outlet property="editNameTextField" destination="MNd-MN-2xg" id="aMB-I1-obW"/>
-                        <outlet property="editProfileButton" destination="aL9-Ef-VWJ" id="uyo-Tx-3kb"/>
                         <outlet property="gcdSaveButton" destination="44H-Qm-0cK" id="88B-2R-3hQ"/>
                         <outlet property="infoLabel" destination="ptT-6m-14q" id="Jy3-do-v6M"/>
                         <outlet property="nameLabel" destination="yrA-fu-06D" id="gcE-TR-Eza"/>
