@@ -37,7 +37,10 @@ class CoreAssembly: CoreAssemblyProtocol {
     lazy var settings: SettingsProtocol = Settings(userDefaults: .standard)
     
     lazy var imagesRequestConfig: RequestConfig<ImagesParser> = RequestConfig<ImagesParser>(
-        request: ImagesRequest(apiKey: "19172184-b6befc45e5420fbf206d05bd7"),
+        request: ImagesRequest(
+            apiKey: Environment.pixabayApiKey,
+            host: Environment.pixabayApiHost
+        ),
         parser: ImagesParser()
     )
     

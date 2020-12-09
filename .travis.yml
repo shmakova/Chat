@@ -1,0 +1,12 @@
+language: swift
+osx_image: xcode11.7
+addons:
+  homebrew:
+    packages:
+      - libsodium
+before_install:
+  - gem install bundler
+install:
+  - bundle install
+script:
+  - bundle exec fastlane build_and_test

@@ -8,15 +8,14 @@
 
 import Foundation
 
-// https://pixabay.com/api/?key={ KEY }&q=yellow+flowers&image_type=photo
-
 class ImagesRequest: RequestProtocol {
     private let apiKey: String
+    private let host: String
 
     private var url: URL? {
         var components = URLComponents()
         components.scheme = "https"
-        components.host = "pixabay.com"
+        components.host = host
         components.path = "/api"
         components.queryItems = [
             URLQueryItem(name: "key", value: apiKey),
@@ -34,7 +33,8 @@ class ImagesRequest: RequestProtocol {
         return URLRequest(url: url)
     }
     
-    init(apiKey: String) {
+    init(apiKey: String, host: String) {
         self.apiKey = apiKey
+        self.host = host
     }
 }

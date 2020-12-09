@@ -43,6 +43,8 @@
 		3B43401D255DD18000EDCCAD /* ConversationsListModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B43401C255DD18000EDCCAD /* ConversationsListModel.swift */; };
 		3B434020255DD67500EDCCAD /* FileStorageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B43401F255DD67500EDCCAD /* FileStorageProtocol.swift */; };
 		3B434022255DD9C900EDCCAD /* FileProfileDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B434021255DD9C900EDCCAD /* FileProfileDataService.swift */; };
+		3B5AFFB4257ECDCB00C348D8 /* Gemfile in Resources */ = {isa = PBXBuildFile; fileRef = 3B5AFFB3257ECDCB00C348D8 /* Gemfile */; };
+		3B5AFFB725814A4500C348D8 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5AFFB625814A4500C348D8 /* Environment.swift */; };
 		3B6C03BB253E26A700C49BC4 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6C03BA253E26A700C49BC4 /* Message.swift */; };
 		3B6C03BD253E26B700C49BC4 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6C03BC253E26B700C49BC4 /* Channel.swift */; };
 		3B6C03BF25408D8700C49BC4 /* ChannelsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B6C03BE25408D8700C49BC4 /* ChannelsService.swift */; };
@@ -155,6 +157,9 @@
 		3B43401C255DD18000EDCCAD /* ConversationsListModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsListModel.swift; sourceTree = "<group>"; };
 		3B43401F255DD67500EDCCAD /* FileStorageProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileStorageProtocol.swift; sourceTree = "<group>"; };
 		3B434021255DD9C900EDCCAD /* FileProfileDataService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileProfileDataService.swift; sourceTree = "<group>"; };
+		3B5AFFB3257ECDCB00C348D8 /* Gemfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Gemfile; sourceTree = "<group>"; };
+		3B5AFFB525802BB000C348D8 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		3B5AFFB625814A4500C348D8 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		3B6C03BA253E26A700C49BC4 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		3B6C03BC253E26B700C49BC4 /* Channel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
 		3B6C03BE25408D8700C49BC4 /* ChannelsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelsService.swift; sourceTree = "<group>"; };
@@ -280,6 +285,8 @@
 		3B33D21E250D052F00355849 = {
 			isa = PBXGroup;
 			children = (
+				3B5AFFB525802BB000C348D8 /* Config.xcconfig */,
+				3B5AFFB3257ECDCB00C348D8 /* Gemfile */,
 				3B1134C8253DF76300C75D4D /* Podfile */,
 				3B1134C62538B9D100C75D4D /* GoogleService-Info.plist */,
 				3B33D229250D053000355849 /* Chat */,
@@ -322,6 +329,7 @@
 			children = (
 				3B33D238250D053900355849 /* Info.plist */,
 				3B33D233250D053800355849 /* Assets.xcassets */,
+				3B5AFFB625814A4500C348D8 /* Environment.swift */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -769,6 +777,7 @@
 				3B1134C72538B9D100C75D4D /* GoogleService-Info.plist in Resources */,
 				3BD745C92524AA1B00D78EEE /* MessageTableViewCell.xib in Resources */,
 				3B33D232250D053000355849 /* ProfileViewController.storyboard in Resources */,
+				3B5AFFB4257ECDCB00C348D8 /* Gemfile in Resources */,
 				3B1134C9253DF76300C75D4D /* Podfile in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -880,6 +889,7 @@
 				3B43400A255D3FC400EDCCAD /* ChannelsServiceProtocol.swift in Sources */,
 				3B041EE2252E3B1D00F96349 /* ThemesPickerDelegate.swift in Sources */,
 				3BE60F0E2565BDA500FCA567 /* ImageCollectionViewCell.swift in Sources */,
+				3B5AFFB725814A4500C348D8 /* Environment.swift in Sources */,
 				3BE60F57256EEDC000FCA567 /* BaseViewController.swift in Sources */,
 				3BD745C82524AA1B00D78EEE /* MessageTableViewCell.swift in Sources */,
 				3B041EDE252E2A5A00F96349 /* ThemeButtonModel.swift in Sources */,
@@ -983,6 +993,7 @@
 /* Begin XCBuildConfiguration section */
 		3B33D239250D053900355849 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3B5AFFB525802BB000C348D8 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1031,7 +1042,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1043,6 +1054,7 @@
 		};
 		3B33D23A250D053900355849 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3B5AFFB525802BB000C348D8 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1085,7 +1097,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.7;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
