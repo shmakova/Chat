@@ -158,6 +158,7 @@ class ProfileViewController: BaseViewController {
         let editButton = UIButton(type: .custom)
         editButton.setTitleColor(view.tintColor, for: .normal)
         editButton.setTitle("Edit", for: .normal)
+        editButton.accessibilityIdentifier = "profile_edit_button"
         editButton.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
         editButton.layer.borderColor = view.tintColor.cgColor
         editButton.layer.borderWidth = 1
