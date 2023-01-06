@@ -1,0 +1,44 @@
+DISCORD_WEBHOOK_URL = ENV['DISCORD_WEBHOOK_URL']
+DISCORD_TITLE = "Chat build and test"
+AUTHOR = {
+    name: "Author",
+    value: "Shmakova Anastasia"
+}
+
+desc 'Build app for testing'
+lane :build_for_testing do
+    cocoapods
+    scan(
+        build_for_testing: true,
+        devices: ["iPhone 11"]
+    )
+end
+
+desc 'Run tests without building'
+lane :run_tests_without_building do
+    scan(
+        test_without_building: true,
+        devices: ["iPhone 11"]
+    )
+end
+
+desc 'Build and test'
+lane :build_and_test do
+    build_for_testing
+    run_tests_without_building
+    discord_notifier(
+        webhook_url: DISCORD_WEBHOOK_URL,
+        title: DISCORD_TITLE,
+        description: "Build succeeded",
+        fields: [ AUTHOR ],
+        success: true
+    )
+rescue => ex
+    discord_notifier(
+        webhook_url: DISCORD_WEBHOOK_URL,
+        title: DISCORD_TITLE,
+        description: "Build failed",
+        fields: [ AUTHOR ],
+        success: false
+    )
+end

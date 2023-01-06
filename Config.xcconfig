@@ -1,0 +1,13 @@
+//
+//  Config.xcconfig
+//  Chat
+//
+//  Created by Anastasia Shmakova on 09.12.2020.
+//  Copyright © 2020 Shmakova Anastasia. All rights reserved.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+PIXABAY_API_HOST = pixabay.com
+PIXABAY_API_KEY = 19172184-b6befc45e5420fbf206d05bd7
